@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUpdated, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onUpdated, nextTick } from 'vue'
 import { marked } from 'marked'
 import ThemeController from './components/ThemeController.vue'
 import TableOfContents from './components/TableOfContents.vue'
@@ -59,7 +59,13 @@ const docs = computed(() => {
   })
 })
 
-const currentPath = ref('index')
+// Get initial path from URL
+function getPathFromUrl() {
+  const path = window.location.pathname.slice(1) // Remove leading slash
+  return path || 'index'
+}
+
+const currentPath = ref(getPathFromUrl())
 const currentDoc = computed(() => docs.value.find(d => d.path === currentPath.value))
 const currentContent = computed(() => currentDoc.value?.content || '')
 
@@ -69,8 +75,23 @@ const renderedHtml = computed(() => {
   return marked(currentDoc.value.content)
 })
 
-function navigate(path) {
+function navigate(path, pushState = true) {
   currentPath.value = path
+
+  // Update URL without page reload
+  const url = path === 'index' ? '/' : `/${path}`
+  if (pushState) {
+    window.history.pushState({ path }, '', url)
+  }
+
+  // Close mobile sidebar on navigation
+  sidebarOpen.value = false
+}
+
+// Handle browser back/forward buttons
+function handlePopState(event) {
+  const path = event.state?.path || getPathFromUrl()
+  navigate(path, false) // Don't push state when handling popstate
 }
 
 // Mobile sidebar toggle
@@ -106,7 +127,21 @@ function setupCopyButtons() {
   })
 }
 
-onMounted(setupCopyButtons)
+onMounted(() => {
+  setupCopyButtons()
+
+  // Set initial state for the current URL
+  const initialPath = getPathFromUrl()
+  window.history.replaceState({ path: initialPath }, '', window.location.pathname || '/')
+
+  // Listen for browser back/forward
+  window.addEventListener('popstate', handlePopState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('popstate', handlePopState)
+})
+
 onUpdated(setupCopyButtons)
 </script>
 

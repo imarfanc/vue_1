@@ -49,8 +49,13 @@ function formatFolderName(name) {
     .join(' ')
 }
 
-function navigate(path) {
+function navigate(event, path) {
+  event.preventDefault()
   emit('navigate', path)
+}
+
+function getHref(path) {
+  return path === 'index' ? '/' : `/${path}`
 }
 </script>
 
@@ -60,9 +65,9 @@ function navigate(path) {
     <ul v-if="groupedDocs._root" class="menu menu-sm">
       <li v-for="doc in groupedDocs._root" :key="doc.path">
         <a
-          @click.prevent="navigate(doc.path)"
+          :href="getHref(doc.path)"
+          @click="navigate($event, doc.path)"
           :class="{ 'active': currentPath === doc.path }"
-          class="cursor-pointer"
         >
           {{ doc.title }}
         </a>
@@ -72,15 +77,15 @@ function navigate(path) {
     <!-- Grouped docs -->
     <template v-for="(docs, folder) in groupedDocs" :key="folder">
       <div v-if="folder !== '_root'" class="mt-4">
-        <h3 class="font-semibold text-sm px-2 mb-2 text-base-content/70">
+        <h3 class="mb-2 px-2 font-semibold text-sm text-base-content/70">
           {{ formatFolderName(folder) }}
         </h3>
         <ul class="menu menu-sm">
           <li v-for="doc in docs" :key="doc.path">
             <a
-              @click.prevent="navigate(doc.path)"
+              :href="getHref(doc.path)"
+              @click="navigate($event, doc.path)"
               :class="{ 'active': currentPath === doc.path }"
-              class="cursor-pointer"
             >
               {{ doc.title }}
             </a>
