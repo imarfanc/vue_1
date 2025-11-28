@@ -1,15 +1,25 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUpdated, nextTick } from 'vue'
 import { marked } from 'marked'
 import ThemeController from './components/ThemeController.vue'
 import TableOfContents from './components/TableOfContents.vue'
 import Sidebar from './components/Sidebar.vue'
 
-// Configure marked to add IDs to headings
+// Configure marked to add IDs to headings and wrap code blocks
 const renderer = new marked.Renderer()
 renderer.heading = function({ text, depth }) {
   const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
   return `<h${depth} id="${id}">${text}</h${depth}>`
+}
+renderer.code = function({ text, lang }) {
+  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  return `<div class="group code-block-wrapper relative not-prose">
+    <button class="top-2 right-2 absolute bg-base-300/80 hover:bg-base-300 opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-base-content/70 hover:text-base-content transition-opacity copy-btn" title="Copy code">
+      <svg class="w-4 h-4 copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+      <svg class="hidden w-4 h-4 check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </button>
+    <pre class="!mt-0"><code class="language-${lang || ''}">${escaped}</code></pre>
+  </div>`
 }
 marked.use({ renderer })
 
@@ -65,10 +75,43 @@ function navigate(path) {
 
 // Mobile sidebar toggle
 const sidebarOpen = ref(false)
+
+// Setup copy buttons for code blocks
+function setupCopyButtons() {
+  nextTick(() => {
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.onclick = async () => {
+        const codeBlock = btn.parentElement?.querySelector('code')
+        if (!codeBlock) return
+
+        try {
+          await navigator.clipboard.writeText(codeBlock.textContent || '')
+          const copyIcon = btn.querySelector('.copy-icon')
+          const checkIcon = btn.querySelector('.check-icon')
+          if (copyIcon && checkIcon) {
+            copyIcon.classList.add('hidden')
+            checkIcon.classList.remove('hidden')
+            btn.title = 'Copied!'
+            setTimeout(() => {
+              copyIcon.classList.remove('hidden')
+              checkIcon.classList.add('hidden')
+              btn.title = 'Copy code'
+            }, 2000)
+          }
+        } catch (err) {
+          console.error('Failed to copy:', err)
+        }
+      }
+    })
+  })
+}
+
+onMounted(setupCopyButtons)
+onUpdated(setupCopyButtons)
 </script>
 
 <template>
-  <div class="flex bg-base-100 min-h-screen">
+  <div class="bg-base-100 min-h-screen">
     <!-- Mobile sidebar toggle -->
     <button
       @click="sidebarOpen = !sidebarOpen"
@@ -79,15 +122,15 @@ const sidebarOpen = ref(false)
       </svg>
     </button>
 
-    <!-- Sidebar -->
+    <!-- Sidebar (Fixed) -->
     <aside
       :class="[
-        'fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-base-200 border-r border-base-300 transition-transform lg:translate-x-0',
+        'fixed top-0 left-0 z-40 h-screen w-64 bg-base-200 border-r border-base-300 transition-transform lg:translate-x-0',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       ]"
     >
       <div class="flex justify-between items-center p-4 border-base-300 border-b">
-        <span class="font-bold text-lg">Docs</span>
+        <span class="font-bold text-primary text-lg">Docs</span>
         <ThemeController />
       </div>
       <div class="h-[calc(100vh-65px)] overflow-y-auto">
@@ -102,18 +145,15 @@ const sidebarOpen = ref(false)
       class="lg:hidden z-30 fixed inset-0 bg-black/50"
     />
 
-    <!-- Main content -->
-    <main class="flex-1 min-w-0">
-      <div class="mx-auto px-4 lg:px-8 py-8 max-w-6xl">
-        <div class="lg:gap-8 lg:grid lg:grid-cols-[1fr_200px]">
-          <!-- Article content -->
-          <article class="max-w-none prose prose-base" v-html="renderedHtml"></article>
+    <!-- Table of Contents (Fixed on right) -->
+    <aside class="hidden lg:block top-0 right-0 fixed p-6 w-56 h-screen overflow-y-auto">
+      <TableOfContents :content="currentContent" />
+    </aside>
 
-          <!-- Table of Contents -->
-          <aside class="hidden lg:block h-fit">
-            <TableOfContents :content="currentContent" />
-          </aside>
-        </div>
+    <!-- Main content (Scrollable center) -->
+    <main class="lg:mr-56 lg:ml-64 min-h-screen">
+      <div class="mx-auto px-4 lg:px-8 py-8 max-w-4xl">
+        <article class="max-w-none prose prose-base" v-html="renderedHtml"></article>
       </div>
     </main>
   </div>
@@ -131,5 +171,23 @@ body {
   margin: 0;
   padding: 0;
   text-align: left;
+}
+
+/* Code block wrapper styling */
+.code-block-wrapper {
+  margin: 1rem 0;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+  border-radius: 0.5rem;
+  background-color: oklch(var(--b2, var(--b1)));
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.code-block-wrapper code {
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 </style>

@@ -69,7 +69,7 @@ function scrollToHeading(id) {
 </script>
 
 <template>
-  <div v-if="headings.length > 0" class="top-8 sticky">
+  <div v-if="headings.length > 0" class="pt-2">
     <h4 class="mb-3 font-semibold text-sm text-base-content/70">On this page</h4>
     <nav>
       <ul class="space-y-1 text-sm">

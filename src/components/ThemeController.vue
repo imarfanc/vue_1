@@ -52,11 +52,11 @@ function setTheme(theme) {
               class="gap-3 px-2"
               :aria-pressed="currentTheme === theme"
             >
-              <div :data-theme="theme" class="gap-0.5 grid grid-cols-2 bg-base-100 shadow-sm p-1 rounded-md shrink-0">
-                <div class="bg-base-content rounded-full size-1"></div>
-                <div class="bg-primary rounded-full size-1"></div>
-                <div class="bg-secondary rounded-full size-1"></div>
-                <div class="bg-accent rounded-full size-1"></div>
+              <div :data-theme="theme" class="gap-0.5 grid grid-cols-2 bg-[oklch(var(--b1))] shadow-sm p-1 rounded-md shrink-0">
+                <div class="bg-[oklch(var(--bc))] rounded-full size-1"></div>
+                <div class="bg-[oklch(var(--p))] rounded-full size-1"></div>
+                <div class="bg-[oklch(var(--s))] rounded-full size-1"></div>
+                <div class="bg-[oklch(var(--a))] rounded-full size-1"></div>
               </div>
               <div class="w-32 truncate">{{ theme }}</div>
               <svg
