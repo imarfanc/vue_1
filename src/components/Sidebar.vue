@@ -55,7 +55,7 @@ function navigate(event, path) {
 }
 
 function getHref(path) {
-  return path === 'index' ? '/' : `/${path}`
+  return path === 'index' ? '#' : `#${path}`
 }
 </script>
 

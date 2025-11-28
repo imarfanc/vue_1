@@ -59,10 +59,10 @@ const docs = computed(() => {
   })
 })
 
-// Get initial path from URL
+// Get initial path from URL (using hash-based routing for GitHub Pages compatibility)
 function getPathFromUrl() {
-  const path = window.location.pathname.slice(1) // Remove leading slash
-  return path || 'index'
+  const hash = window.location.hash.slice(1) // Remove leading #
+  return hash || 'index'
 }
 
 const currentPath = ref(getPathFromUrl())
@@ -75,23 +75,23 @@ const renderedHtml = computed(() => {
   return marked(currentDoc.value.content)
 })
 
-function navigate(path, pushState = true) {
+function navigate(path, updateHash = true) {
   currentPath.value = path
 
-  // Update URL without page reload
-  const url = path === 'index' ? '/' : `/${path}`
-  if (pushState) {
-    window.history.pushState({ path }, '', url)
+  // Update URL hash without page reload
+  if (updateHash) {
+    const hash = path === 'index' ? '' : path
+    window.location.hash = hash
   }
 
   // Close mobile sidebar on navigation
   sidebarOpen.value = false
 }
 
-// Handle browser back/forward buttons
-function handlePopState(event) {
-  const path = event.state?.path || getPathFromUrl()
-  navigate(path, false) // Don't push state when handling popstate
+// Handle browser back/forward buttons (hash change)
+function handleHashChange() {
+  const path = getPathFromUrl()
+  navigate(path, false) // Don't update hash when handling hashchange
 }
 
 // Mobile sidebar toggle
@@ -130,16 +130,12 @@ function setupCopyButtons() {
 onMounted(() => {
   setupCopyButtons()
 
-  // Set initial state for the current URL
-  const initialPath = getPathFromUrl()
-  window.history.replaceState({ path: initialPath }, '', window.location.pathname || '/')
-
-  // Listen for browser back/forward
-  window.addEventListener('popstate', handlePopState)
+  // Listen for browser back/forward (hash changes)
+  window.addEventListener('hashchange', handleHashChange)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('popstate', handlePopState)
+  window.removeEventListener('hashchange', handleHashChange)
 })
 
 onUpdated(setupCopyButtons)
