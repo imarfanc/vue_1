@@ -5,6 +5,14 @@ import ThemeController from './components/ThemeController.vue'
 import TableOfContents from './components/TableOfContents.vue'
 import Sidebar from './components/Sidebar.vue'
 
+// Configure marked to add IDs to headings
+const renderer = new marked.Renderer()
+renderer.heading = function({ text, depth }) {
+  const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+  return `<h${depth} id="${id}">${text}</h${depth}>`
+}
+marked.use({ renderer })
+
 // Dynamic import of MD/MDX files as raw text
 const modules = import.meta.glob('./docs/**/*.{md,mdx}', { query: '?raw', import: 'default', eager: true })
 
@@ -43,7 +51,7 @@ const docs = computed(() => {
 
 const currentPath = ref('index')
 const currentDoc = computed(() => docs.value.find(d => d.path === currentPath.value))
-const currentContent = computed(() => currentDoc.value?.rawContent || '')
+const currentContent = computed(() => currentDoc.value?.content || '')
 
 // Render markdown to HTML
 const renderedHtml = computed(() => {
@@ -102,7 +110,7 @@ const sidebarOpen = ref(false)
           <article class="max-w-none prose prose-base" v-html="renderedHtml"></article>
 
           <!-- Table of Contents -->
-          <aside class="hidden lg:block">
+          <aside class="hidden lg:block h-fit">
             <TableOfContents :content="currentContent" />
           </aside>
         </div>
