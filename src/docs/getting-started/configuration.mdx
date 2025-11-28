@@ -1,0 +1,86 @@
+---
+title: Configuration
+description: Learn how to configure the documentation site.
+order: 2
+---
+
+This guide covers the various configuration options available for customizing your documentation site.
+
+## Astro Configuration
+
+The main configuration file is `astro.config.mjs` in the project root.
+
+```javascript
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  site: 'https://your-username.github.io',
+  base: '/your-repo',
+  integrations: [mdx()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+});
+```
+
+### Key Options
+
+- **site** - Your production URL
+- **base** - The base path for GitHub Pages deployment
+- **integrations** - Astro integrations like MDX support
+
+## Content Configuration
+
+Documentation content is configured in `src/content/config.ts`:
+
+```typescript
+import { defineCollection, z } from 'astro:content';
+
+const docsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    order: z.number().optional().default(999),
+  }),
+});
+
+export const collections = {
+  docs: docsCollection,
+};
+```
+
+### Frontmatter Options
+
+Each documentation file supports these frontmatter fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Page title |
+| `description` | string | No | Page description for SEO |
+| `order` | number | No | Sort order in sidebar (default: 999) |
+
+## Theme Configuration
+
+Themes are configured in `src/assets/app.css`:
+
+```css
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: all;
+}
+@plugin "@tailwindcss/typography";
+```
+
+This enables all 35+ daisyUI themes. You can customize which themes are available by modifying this file.
+
+## GitHub Pages Deployment
+
+The deployment workflow is configured in `.github/workflows/deploy.yml`. It automatically deploys to GitHub Pages when you push to the `main` branch.
+
+Make sure to:
+1. Enable GitHub Pages in your repository settings
+2. Set the source to "GitHub Actions"
+

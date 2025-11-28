@@ -1,0 +1,64 @@
+---
+title: Installation
+description: Learn how to install and set up the documentation site.
+order: 1
+---
+
+This guide will help you get the documentation site up and running on your local machine.
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Node.js** - Version 18 or higher
+- **npm** - Comes with Node.js
+- **Git** - For version control
+
+## Installation Steps
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Development Server
+
+```bash
+npm run dev
+```
+
+The site will be available at `http://localhost:4321`.
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+
+## Project Structure
+
+```
+project-root/
+├── src/
+│   ├── components/    # Astro components
+│   ├── content/       # Documentation content
+│   ├── layouts/       # Page layouts
+│   └── pages/         # Route pages
+├── public/            # Static assets
+└── astro.config.mjs   # Astro configuration
+```
+
+## Next Steps
+
+Once you have the site running, learn how to [configure](/astro_2/getting-started/configuration) it for your needs.
+
