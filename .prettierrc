@@ -15,7 +15,9 @@
     {
       "files": "*.mdx",
       "options": {
-        "parser": "mdx"
+        "parser": "mdx",
+        "printWidth": 10000,
+        "proseWrap": "never"
       }
     }
   ]
