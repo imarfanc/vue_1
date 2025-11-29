@@ -36,11 +36,11 @@ The development server will start at `http://localhost:5173`.
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Start development server with hot reload |
+| `npm run build`   | Build for production                     |
+| `npm run preview` | Preview production build locally         |
 
 ## Deployment
 
@@ -53,6 +53,7 @@ npm run build
 ```
 
 This generates optimized files in the `dist/` directory:
+
 ```
 dist/
 ├── index.html
@@ -80,6 +81,7 @@ This project includes automatic deployment to GitHub Pages via GitHub Actions.
 #### Automatic Deployment (Recommended)
 
 1. **Push your code to GitHub:**
+
    ```bash
    git add .
    git commit -m "Initial commit"
@@ -171,6 +173,7 @@ For traditional web hosts:
 If using a custom domain (instead of `username.github.io/repo`):
 
 1. Set `VITE_BASE_URL=/` in your environment or update `vite.config.js`:
+
    ```js
    base: '/',
    ```
@@ -206,6 +209,7 @@ If using a custom domain (instead of `username.github.io/repo`):
 
 1. Create a new `.md` or `.mdx` file in `src/docs/`
 2. Add frontmatter at the top:
+
    ```markdown
    ---
    title: Your Page Title
@@ -221,6 +225,7 @@ If using a custom domain (instead of `username.github.io/repo`):
 ## Theming
 
 Click the theme picker in the sidebar to switch between 35+ daisyUI themes including:
+
 - Light themes: light, cupcake, bumblebee, emerald, corporate, retro, etc.
 - Dark themes: dark, synthwave, halloween, forest, dracula, night, etc.
 

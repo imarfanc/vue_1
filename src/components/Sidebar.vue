@@ -1,61 +1,61 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 const props = defineProps({
   docs: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   currentPath: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
 
-const emit = defineEmits(['navigate'])
+const emit = defineEmits(['navigate']);
 
 // Group docs by folder
 const groupedDocs = computed(() => {
-  const groups = {}
-  
-  props.docs.forEach(doc => {
-    const parts = doc.path.split('/')
+  const groups = {};
+
+  props.docs.forEach((doc) => {
+    const parts = doc.path.split('/');
     if (parts.length > 1) {
-      const folder = parts[0]
+      const folder = parts[0];
       if (!groups[folder]) {
-        groups[folder] = []
+        groups[folder] = [];
       }
-      groups[folder].push(doc)
+      groups[folder].push(doc);
     } else {
       if (!groups['_root']) {
-        groups['_root'] = []
+        groups['_root'] = [];
       }
-      groups['_root'].push(doc)
+      groups['_root'].push(doc);
     }
-  })
-  
+  });
+
   // Sort each group by order
-  Object.keys(groups).forEach(key => {
-    groups[key].sort((a, b) => (a.order || 999) - (b.order || 999))
-  })
-  
-  return groups
-})
+  Object.keys(groups).forEach((key) => {
+    groups[key].sort((a, b) => (a.order || 999) - (b.order || 999));
+  });
+
+  return groups;
+});
 
 function formatFolderName(name) {
   return name
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 function navigate(event, path) {
-  event.preventDefault()
-  emit('navigate', path)
+  event.preventDefault();
+  emit('navigate', path);
 }
 
 function getHref(path) {
-  return path === 'index' ? '#' : `#${path}`
+  return path === 'index' ? '#' : `#${path}`;
 }
 </script>
 
@@ -67,7 +67,7 @@ function getHref(path) {
         <a
           :href="getHref(doc.path)"
           @click="navigate($event, doc.path)"
-          :class="{ 'active': currentPath === doc.path }"
+          :class="{ active: currentPath === doc.path }"
         >
           {{ doc.title }}
         </a>
@@ -85,7 +85,7 @@ function getHref(path) {
             <a
               :href="getHref(doc.path)"
               @click="navigate($event, doc.path)"
-              :class="{ 'active': currentPath === doc.path }"
+              :class="{ active: currentPath === doc.path }"
             >
               {{ doc.title }}
             </a>
@@ -95,4 +95,3 @@ function getHref(path) {
     </template>
   </nav>
 </template>
-

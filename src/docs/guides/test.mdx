@@ -97,11 +97,11 @@ Here is another paragraph that can be used to elaborate on the features of markd
 
 [Regular link](https://example.com)
 
-[Link with title](https://example.com "Example Title")
+[Link with title](https://example.com 'Example Title')
 
 ### Images
 
-![Alt text](https://cdn.midjourney.com/3fb5dc99-7314-43cb-8cb1-7a34a2488558/0_2.png "Image Title")
+![Alt text](https://cdn.midjourney.com/3fb5dc99-7314-43cb-8cb1-7a34a2488558/0_2.png 'Image Title')
 
 <img
   src="https://cdn.midjourney.com/88c6cfcd-1bc1-45bd-83cf-28a082d6d6d3/0_3.png"
@@ -120,7 +120,7 @@ This is `inline code` example.
 
 ```javascript
 function hello() {
-  console.log("Hello, world!");
+  console.log('Hello, world!');
 }
 ```
 
@@ -161,17 +161,27 @@ def hello():
 ## Bootstrap Icons <i class="bi bi-apple"></i>
 
 <i class="bi-box-arrow-up-right bi" style="font-size: 3em;"></i>[
-<i class="bi-box-arrow-down-right bi" style="font-size: 3em;"></i>](https://app.squareup.com/dashboard/shifts/timecards)
+<i class="bi-box-arrow-down-right bi" style="font-size: 3em;"></i>
+](https://app.squareup.com/dashboard/shifts/timecards)
 
 ## iconify Icons
 
 <i class="iconify-inline" data-icon="mdi:apple"></i>
 
-<i class="iconify-inline" data-icon="majesticons:open" style="font-size: 2em;"></i>
+<i
+  class="iconify-inline"
+  data-icon="majesticons:open"
+  style="font-size: 2em;"
+></i>
 
 [<i class="iconify-inline" data-icon="famicons:open-outline" style="font-size: 3em;"></i>](https://app.squareup.com/dashboard/shifts/timecards)
 
-<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 512 512">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="36"
+  height="36"
+  viewBox="0 0 512 512"
+>
   <path
     fill="none"
     stroke="currentColor"
@@ -256,7 +266,7 @@ def hello():
 ```yaml
 icon: mdi:apple
 title: Example Card 5
-description: "This is an example of a custom card component with a custom Tailwind color border"
+description: 'This is an example of a custom card component with a custom Tailwind color border'
 image: https://cdn.midjourney.com/1272f6de-08b0-45eb-a4f3-80f7e76c1c62/0_0.png
 badges:
   - new4
@@ -331,9 +341,9 @@ This is a danger box.
 
 ```yaml
 link: https://www.youtube.com/watch?v=90Q5bMN6u2w
-imageSrc: "https://i.ytimg.com/vi/90Q5bMN6u2w/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDEDBp4i_9cyamHAdM77w-IRZlEow"
+imageSrc: 'https://i.ytimg.com/vi/90Q5bMN6u2w/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDEDBp4i_9cyamHAdM77w-IRZlEow'
 title: Ek Din Aap - HD VIDEO | Shah Rukh Khan & Juhi Chawla | Yes Boss | 90's Romantic Hindi Songs
-description: "Follow sama on X for updates!"
+description: 'Follow sama on X for updates!'
 icon: simple-icons:youtube
 width: 96
 group: Music
